@@ -115,6 +115,11 @@ body{
 .header{
   text-align: center;
   text-size-adjust:  100px;
+  font-size: 100px;
+}
+.footer{
+  text-align: center;
+  text-size-adjust:  100px;
 }
 .form{
   background-color: rgb(232, 144, 11);
