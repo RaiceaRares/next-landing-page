@@ -5,7 +5,7 @@ import { Footer } from '@/components/common';
 
 export default function App() {
   return (
-    <><Header />
+    <><Header/>
     <RegistrationForm/>
     <Footer />
     </>

@@ -1,35 +1,90 @@
-import React from 'react';
+import { useState } from 'react';
 
 function RegistrationForm() {
-    return(
-      <div className="form">
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState(' ');
+  const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState(' ');
+  const [email, setEmail] = useState('');
+  const [errorMessage, setErrorMessage] = useState('');
+  const [successMessage, setSuccessMessage] = useState('');
 
-          <div className="form-body">
-              <div className="username">
-                  <label className="form__label" htmlFor="firstName">First Name </label>
-                  <input className="form__input" type="text" id="firstName" placeholder="First Name"/>
-              </div>
-              <div className="lastname">
-                  <label className="form__label" htmlFor="lastName">Last Name </label>
-                  <input  type="text" name="" id="lastName"  className="form__input"placeholder="LastName"/>
-              </div>
-              <div className="email">
-                  <label className="form__label" htmlFor="email">Email </label>
-                  <input  type="email" id="email" className="form__input" placeholder="Email"/>
-              </div>
-              <div className="password">
-                  <label className="form__label" htmlFor="password">Password </label>
-                  <input className="form__input" type="password"  id="password" placeholder="Password"/>
-              </div>
-              <div className="confirm-password">
-                  <label className="form__label" htmlFor="confirmPassword">Confirm Password </label>
-                  <input className="form__input" type="password" id="confirmPassword" placeholder="Confirm Password"/>
-              </div>
-          </div>
-          <div className="footer">
-              <button type="submit" className="btn">Register</button>
-          </div>
-      </div>      
-    )       
+  const handleSubmit = async (event: { preventDefault: () => void; }) => {
+    event.preventDefault();
+
+    try {
+      const response = await fetch('/api/register', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          firstName,
+          lastName,
+          password,
+          email,
+        }),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message);
+      }
+
+      setSuccessMessage('Registration successful!');
+      setFirstName('');
+      setLastName(' ');
+      setPassword('');
+      setEmail('');
+      setErrorMessage('');
+    } catch (error) {
+      setErrorMessage(error.message);
+      setSuccessMessage('');
+    }
+  };
+
+  return (
+    <form onSubmit={handleSubmit}>
+      <div>
+        <label htmlFor="firstname">FirsName:</label>
+        <input
+          type="text"
+          id="firstname"
+          value={firstName}
+          onChange={(event) => setFirstName(event.target.value)}
+        />
+      </div>
+      <div>
+        <label htmlFor="lastname">LastName:</label>
+        <input
+          type="text"
+          id="lastname"
+          value={lastName}
+          onChange={(event) => setLastName(event.target.value)}
+        />
+      </div>
+      <div>
+        <label htmlFor="password">Password:</label>
+        <input
+          type="password"
+          id="password"
+          value={password}
+          onChange={(event) => setPassword(event.target.value)}
+        />
+      </div>
+      <div>
+        <label htmlFor="email">Email:</label>
+        <input
+          type="email"
+          id="email"
+          value={email}
+          onChange={(event) => setEmail(event.target.value)}
+        />
+      </div>
+     
+      {errorMessage && <div>{errorMessage}</div>}
+      {successMessage && <div>{successMessage}</div>}
+      <button type="submit">Register</button>
+    </form>
+  );
 }
-export default RegistrationForm;
